@@ -12,10 +12,15 @@ pool:
   - agent.name -equals master-node
 
 variables:
-  bkRg: 'tfstateRG01'
-  bkstorage: 'tfstate0126626'
-  bkcontainer: 'tfstate'
-  bkstoragekey: 'devpipeline.terraform.tfstate'
+  - name: bkRg
+    value: 'tfstateRG01'
+  - name: bkstorage
+    value: 'tfstate0126626'
+  - name: bkcontainer
+    value: 'tfstate'
+  - name: bkstoragekey
+    value: 'devpipeline.terraform.tfstate'
+  - group: terraform-dev-vars
 
 stages:
   - stage: tfvalidate
@@ -66,11 +71,11 @@ stages:
             displayName: plan
             inputs:
               provider: 'azurerm'
-              command: 'plan'
+              command: 'plan -var="env=$(env)"'
               environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
           - task: TerraformTask@5
             displayName: apply
             inputs:
               provider: 'azurerm'
-              command: 'apply'
+              command: 'apply -var="env=$(env)"'
               environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
