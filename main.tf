@@ -7,6 +7,12 @@ terraform {
       version = "=3.0.0"
     }
   }
+  backend "azurerm" {
+    resource_group_name = var.bkRg
+    storage_account_name = var.bkstorage
+    container_name = var.bkcontainer
+    key = var.bkstoragekey
+  }
 }
 
 # Declare the variable for environment
