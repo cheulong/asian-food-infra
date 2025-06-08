@@ -24,6 +24,7 @@ variable "env" {
 
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
+  storage_use_azuread = true
   features {}
 }
 
