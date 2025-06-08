@@ -11,11 +11,66 @@ pool:
   demands:
   - agent.name -equals master-node
 
-steps:
-- script: echo Hello, world! DEV
-  displayName: 'Run a one-line script'
+variables:
+  bkRg: 'tfstateRG01'
+  bkstorage: 'tfstate0126626'
+  bkcontainer: 'tfstate'
+  bkstoragekey: 'devpipeline.terraform.tfstate'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+stages:
+  - stage: tfvalidate
+    jobs:
+      - job: validate
+        continueOnError: false
+        steps:
+          - task: TerraformInstaller@1
+            displayName: tfinstall
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformTask@5
+            displayName: Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'AsianFoodServiceConnection'
+              backendAzureRmResourceGroupName: '$(bkRg)'
+              backendAzureRmStorageAccountName: '$(bkRg)'
+              backendAzureRmContainerName: '$(bkcontainer)'
+              backendAzureRmKey: '$(bkstoragekey)'
+          - task: TerraformTask@5
+            displayName: Validate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+  - stage: tfdeploy
+    condition: succeeded('tfvalidate')
+    dependsOn: tfvalidate
+    jobs:
+      - job: apply
+        steps:
+          - task: TerraformInstaller@1
+            displayName: tfinstall
+            inputs:
+              terraformVersion: 'latest'
+          - task: TerraformTask@5
+            displayName: Init
+            inputs:
+              provider: 'azurerm'
+              command: 'init'
+              backendServiceArm: 'AsianFoodServiceConnection'
+              backendAzureRmResourceGroupName: '$(bkRg)'
+              backendAzureRmStorageAccountName: '$(bkRg)'
+              backendAzureRmContainerName: '$(bkcontainer)'
+              backendAzureRmKey: '$(bkstoragekey)'
+          - task: TerraformTask@5
+            displayName: plan
+            inputs:
+              provider: 'azurerm'
+              command: 'plan'
+              environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
+          - task: TerraformTask@5
+            displayName: apply
+            inputs:
+              provider: 'azurerm'
+              command: 'apply'
+              environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
