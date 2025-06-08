@@ -71,11 +71,13 @@ stages:
             displayName: plan
             inputs:
               provider: 'azurerm'
-              command: 'plan -var="env=$(env)"'
+              command: 'plan'
+              commandOptions: '-var="env=$(env)"'
               environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
           - task: TerraformTask@5
             displayName: apply
             inputs:
               provider: 'azurerm'
-              command: 'apply -var="env=$(env)"'
+              command: 'apply'
+              commandOptions: '-var="env=$(env)"'
               environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
