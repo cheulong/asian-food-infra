@@ -19,7 +19,7 @@ variables:
   - name: bkcontainer
     value: 'tfstate'
   - name: bkstoragekey
-    value: 'devpipeline.terraform.tfstate'
+    value: 'tfstate'
   - group: terraform-dev-vars
 
 stages:
