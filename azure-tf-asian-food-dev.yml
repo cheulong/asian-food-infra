@@ -38,7 +38,7 @@ stages:
               command: 'init'
               backendServiceArm: 'AsianFoodServiceConnection'
               backendAzureRmResourceGroupName: '$(bkRg)'
-              backendAzureRmStorageAccountName: '$(bkRg)'
+              backendAzureRmStorageAccountName: '$(bkstorage)'
               backendAzureRmContainerName: '$(bkcontainer)'
               backendAzureRmKey: '$(bkstoragekey)'
 
@@ -64,7 +64,7 @@ stages:
               command: 'init'
               backendServiceArm: 'AsianFoodServiceConnection'
               backendAzureRmResourceGroupName: '$(bkRg)'
-              backendAzureRmStorageAccountName: '$(bkRg)'
+              backendAzureRmStorageAccountName: '$(bkstorage)'
               backendAzureRmContainerName: '$(bkcontainer)'
               backendAzureRmKey: '$(bkstoragekey)'
           - task: TerraformTask@5
