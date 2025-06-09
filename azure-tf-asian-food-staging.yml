@@ -4,7 +4,10 @@
 # https://aka.ms/yaml
 
 trigger:
+# Starter pipeline
 - staging
+# Disable PR triggers if not needed
+pr: none
 
 pool:
   name: Default
