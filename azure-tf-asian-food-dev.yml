@@ -28,15 +28,13 @@ stages:
             inputs:
               terraformVersion: 'latest'
           - task: TerraformTask@5
-            displayName: Init
             inputs:
               provider: 'azurerm'
               command: 'init'
-              backendServiceArm: 'AsianFoodServiceConnection'
-              backendAzureRmResourceGroupName: '$(bkRg)'
-              backendAzureRmStorageAccountName: '$(bkRg)'
-              backendAzureRmContainerName: '$(bkcontainer)'
-              backendAzureRmKey: '$(bkstoragekey)'
+              backendServiceArm: 'allo devops subscription(142f34ee-c9b1-4610-b888-8fee69adccd6)'
+              backendAzureRmStorageAccountName: 'tfstate0126626'
+              backendAzureRmContainerName: 'pipetfstate'
+              backendAzureRmKey: 'dev.tfstate'
           - task: TerraformTask@5
             displayName: Validate
             inputs:
