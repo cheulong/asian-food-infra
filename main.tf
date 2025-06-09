@@ -24,8 +24,8 @@ provider "azurerm" {
 }
 
 # Create a resource group
-resource "azurerm_resource_group" "example_${var.env}" {
-  name     = "example-resources"
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources-${var.env}"
   location = "Southeast Asia"
   tags = {
     environment = var.env
