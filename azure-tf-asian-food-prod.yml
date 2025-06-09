@@ -5,6 +5,8 @@
 
 trigger:
 - prod
+# Disable PR triggers if not needed
+pr: none
 
 pool:
   vmImage: ubuntu-latest
