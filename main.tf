@@ -29,5 +29,6 @@ resource "azurerm_resource_group" "example" {
   location = "Southeast Asia"
   tags = {
     environment = var.env
+    created_by  = "Terraform"
   }
 }
