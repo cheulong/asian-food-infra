@@ -4,7 +4,13 @@
 # https://aka.ms/yaml
 
 trigger:
-- prod
+  branches:
+    include:
+      - prod
+  paths:
+    include:
+      - terraform/**
+      - azure-pipelines/azure-tf-asian-food-prod.yml
 # Disable PR triggers if not needed
 pr: none
 
