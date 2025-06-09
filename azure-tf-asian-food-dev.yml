@@ -5,6 +5,8 @@
 
 trigger:
 - dev
+# Disable PR triggers if not needed
+pr: none
 
 pool:
   name: Default
