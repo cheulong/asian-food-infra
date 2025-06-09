@@ -15,7 +15,7 @@ variables:
   - name: bkRg
     value: 'tfstateRG01'
   - name: bkstorage
-    value: 'tfstate0126626'
+    value: 'asianfood '
   - name: bkcontainer
     value: 'tfstate'
   - name: bkstoragekey
@@ -36,10 +36,12 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              backendServiceArm: 'allo devops subscription(142f34ee-c9b1-4610-b888-8fee69adccd6)'
-              backendAzureRmStorageAccountName: 'tfstate0126626'
-              backendAzureRmContainerName: 'pipetfstate'
-              backendAzureRmKey: 'dev.tfstate'
+              backendServiceArm: 'terraform'
+              backendAzureRmResourceGroupName: '$(bkRg)'
+              backendAzureRmStorageAccountName: '$(bkRg)'
+              backendAzureRmContainerName: '$(bkcontainer)'
+              backendAzureRmKey: '$(bkstoragekey)'
+
           - task: TerraformTask@5
             displayName: Validate
             inputs:
