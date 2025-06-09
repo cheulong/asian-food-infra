@@ -36,7 +36,7 @@ stages:
             inputs:
               provider: 'azurerm'
               command: 'init'
-              backendServiceArm: 'terraform'
+              backendServiceArm: 'AsianFoodServiceConnection'
               backendAzureRmResourceGroupName: '$(bkRg)'
               backendAzureRmStorageAccountName: '$(bkRg)'
               backendAzureRmContainerName: '$(bkcontainer)'
