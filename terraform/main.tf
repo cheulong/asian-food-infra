@@ -30,5 +30,6 @@ resource "azurerm_resource_group" "example" {
   tags = {
     environment = var.env
     created_by  = "Terraform CI"
+    terraform   = "true"
   }
 }
