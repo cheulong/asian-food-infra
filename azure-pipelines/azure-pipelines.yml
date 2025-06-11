@@ -43,12 +43,18 @@ stages:
               backendAzureRmStorageAccountName: '$(bkstorage)'
               backendAzureRmContainerName: '$(bkcontainer)'
               backendAzureRmKey: '$(bkstoragekey)'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
 
           - task: TerraformTask@5
             displayName: Validate
             inputs:
               provider: 'azurerm'
               command: 'validate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+            
+            
   - stage: tfdeploy
     condition: succeeded('tfvalidate')
     dependsOn: tfvalidate
@@ -59,6 +65,8 @@ stages:
             displayName: tfinstall
             inputs:
               terraformVersion: 'latest'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
           - task: TerraformTask@5
             displayName: Init
             inputs:
@@ -69,13 +77,34 @@ stages:
               backendAzureRmStorageAccountName: '$(bkstorage)'
               backendAzureRmContainerName: '$(bkcontainer)'
               backendAzureRmKey: '$(bkstoragekey)'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+          - task: TerraformTaskV4@4
+            displayName: Tf validate
+            inputs:
+              provider: 'azurerm'
+              command: 'validate'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+          - task: TerraformTaskV4@4
+            displayName: Tf fmt
+            inputs:
+              provider: 'azurerm'
+              command: 'custom'
+              customCommand: 'fmt'
+              outputTo: 'console'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
+              environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
           - task: TerraformTask@5
             displayName: plan
             inputs:
               provider: 'azurerm'
               command: 'plan'
-              commandOptions: '-var="env=$(env)"'
+              commandOptions: '-var="env=$(env)" -out $(Build.SourcesDirectory)/terraform/tfplanfile'
               environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
+              workingDirectory: '$(System.DefaultWorkingDirectory)/terraform'
+
           # - task: TerraformTask@5
           #   displayName: apply
           #   inputs:
@@ -83,3 +112,17 @@ stages:
           #     command: 'apply'
           #     commandOptions: '-var="env=$(env)"'
           #     environmentServiceNameAzureRM: 'AsianFoodServiceConnection'
+          - task: ArchiveFiles@2
+            displayName: Zip TF code
+            inputs:
+              rootFolderOrFile: '$(Build.SourcesDirectory)/terraform'
+              includeRootFolder: false
+              archiveType: 'zip'
+              archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+              replaceExistingArchive: true
+          
+          - task: PublishBuildArtifacts@1
+            inputs:
+              PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+              ArtifactName: '$(Build.BuildId)-build'
+              publishLocation: 'Container'
