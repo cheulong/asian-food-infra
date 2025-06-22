@@ -126,3 +126,23 @@ stages:
               PathtoPublish: '$(Build.ArtifactStagingDirectory)'
               ArtifactName: '$(Build.BuildId)-build'
               publishLocation: 'Container'
+
+  - stage: UpdateManifestRepo
+    condition: succeeded('tfdeploy')
+    dependsOn: tfdeploy
+    jobs:
+      - job: UpdateManifest
+        steps:
+          - checkout: none
+          
+          - script: |
+              git clone https://$(gitUsername):$(gitPAT)@github.com/yourname/infra-repo.git
+              cd infra-repo
+
+              # update image tag (basic example with sed)
+              sed -i 's|image: yourname/app:.*|image: yourname/app:$(imageTag)|' k8s/deployment.yaml
+
+              git config user.name "azure-devops"
+              git config user.email "devops@yourdomain.com"
+              git commit -am "Update image to $(imageTag)"
+              git push origin main
